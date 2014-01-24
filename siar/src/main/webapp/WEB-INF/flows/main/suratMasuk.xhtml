@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">              
+		
+		<p:growl id="messages"/>		
+		<h:form id="formSuratMasuk">
+			<p:dataTable id="tblSuratMasuk" var="suratMasuk" value="#{suratMasukMB.suratMasuks}" widgetVar="smTable" filteredValue="#{suratMasukMB.filteredSuratMasuk}"  
+		            emptyMessage="Tidak ada data surat masuk yang cocok dengan kriteria pencarian"
+		            paginator="true" rows="10"  
+	                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+	                rowsPerPageTemplate="5,10">  
+		  
+		         <f:facet name="header">  
+		            <div style="float:left">
+		                <h:outputText value="Tahun : " /> 
+	        			<p:inputMask id="tahun" maxlength="4"  value="#{suratMasukMB.tahun}" mask="9999" styleClass="inputanSmall"/>
+						<p:commandButton update="tblSuratMasuk" value="Load Data" icon="ui-cari" styleClass="tombol"/>	        					            
+		            </div>  
+		            <div style="float:right;text-align:right;">
+						<p:commandButton value="Tambah" icon="ui-tambah" styleClass="tombol" 
+							action="#{suratMasukMB.prepareInsert(event)}" oncomplete="PF('dlgEditSuratMasuk').show();" update=":formEditSM:pnlEditSM"
+							title="Tambah data surat masuk"/>	        					            
+		            </div>
+		            <div class="clearfix"></div>  	
+		        </f:facet>  
+		  
+		        <p:column id="noUrutSM" headerText="No. Urut" style="text-align:right;" width="5%">  
+		            <h:outputText value="#{suratMasuk.noUrut}"/>  
+		        </p:column>  
+		  
+		        <p:column id="noSuratSM" headerText="No. Surat" filterBy="noSurat" filterMatchMode="contains">  
+		            <h:outputText value="#{suratMasuk.noSurat}" />  
+		        </p:column>
+		        		      
+		        <p:column id="perihalSM" headerText="Perihal" filterBy="perihal" filterMatchMode="contains">  
+		            <h:outputText value="#{suratMasuk.perihal}" />  
+		        </p:column>
+		        
+		        <p:column id="asalSurat" headerText="Asal Surat" filterBy="asalSurat" filterMatchMode="contains">  
+		            <h:outputText value="#{suratMasuk.asalSurat}" />  
+		        </p:column>
+		        
+		        <p:column style="width:10%;" headerText="Aksi">
+		        	<p:commandButton icon="ui-edit" oncomplete="PF('dlgEditSuratMasuk').show();" update=":formEditSM:pnlEditSM" title="Ubah data surat masuk"
+		        		action="#{suratMasukMB.prepareUpdate(event)}">
+		        		<f:setPropertyActionListener target="#{suratMasukMB.suratMasuk}" value="#{suratMasuk}"/>
+		        	</p:commandButton>
+		        	<p:commandButton icon="ui-delete" title="Hapus data surat masuk" actionListener="#{suratMasukMB.deleteSuratMasuk(event)}" update=":messages,tblSuratMasuk">  
+        				<f:setPropertyActionListener target="#{suratMasukMB.suratMasuk}" value="#{suratMasuk}"/>
+        				<p:confirm header="Konfirmasi" message="Yakin hapus data ini?" icon="ui-icon-alert" />
+		        	</p:commandButton>
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">  
+				        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+				        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+				    </p:confirmDialog>		        	
+		        </p:column>  		        
+		    </p:dataTable><br/>
+	    </h:form>
+	    <p:dialog id="dialogSuratMasuk" header="Tambah/Ubah Data Surat Masuk" widgetVar="dlgEditSuratMasuk" modal="true" closeOnEscape="true" resizable="false">  
+			<h:form id="formEditSM" enctype="multipart/form-data" >
+				<p:panelGrid columns="4" id="pnlEditSM">
+					<p:outputLabel value="No. Urut" />
+    				<p:inputText value="#{suratMasukMB.suratMasuk.noUrut}" styleClass="inputanSmall" disabled="true"/>
+    				<p:outputLabel value="No. Surat" />
+    				<p:inputText value="#{suratMasukMB.suratMasuk.noSurat}" styleClass="inputanMedium" required="false" maxlength="200"/>
+					<p:outputLabel value="Tgl. Surat" />
+					<p:calendar value="#{suratMasukMB.suratMasuk.tglSurat}" showOn="button" navigator="true" required="false" locale="id" pattern="dd-MMM-yyyy" styleClass="inputanMedium"/>
+    				<p:outputLabel value="Asal Surat" />
+    				<p:inputText value="#{suratMasukMB.suratMasuk.asalSurat}" styleClass="inputanMedium" required="false" maxlength="250"/>
+    				<p:outputLabel value="Kode Klasifikasi" />
+					<p:selectOneMenu required="true" value="#{suratMasukMB.suratMasuk.klasifikasiArsip.id}" panelStyle="width:250px"  
+                         style="width:260px"  filter="true" filterMatchMode="contains">  
+            			<f:selectItem itemLabel="#{suratMasukMB.suratMasuk.klasifikasiArsip.kodeKlasifikasi} - #{suratMasukMB.suratMasuk.klasifikasiArsip.rincian}" itemValue="#{suratMasukMB.suratMasuk.klasifikasiArsip.id}" />  
+            			<f:selectItems value="#{suratMasukMB.selectOneItemsKlasifikasiArsip}"/>             			 
+					</p:selectOneMenu>					
+					<p:outputLabel value="Indeks" />
+    				<p:inputText value="#{suratMasukMB.suratMasuk.indeks}" styleClass="inputanLarge" required="true" maxlength="150"/>
+    				<p:outputLabel value="Perihal" />
+    				<p:inputText value="#{suratMasukMB.suratMasuk.perihal}" styleClass="inputanLarge" required="false" maxlength="200"/>
+    				<p:outputLabel value="Isi Ringkasan" />
+    				<p:inputTextarea value="#{suratMasukMB.suratMasuk.isiRingkasan}" required="false" rows="5" cols="50"/>
+					<p:outputLabel value="Lampiran" />
+    				<p:inputText value="#{suratMasukMB.suratMasuk.lampiran}" styleClass="inputanMedium" required="false" maxlength="100"/>
+    				<p:outputLabel value="Koreksi" />
+    				<p:inputText value="#{suratMasukMB.suratMasuk.koreksi}" styleClass="inputanMedium" required="false" maxlength="200"/>
+					<p:outputLabel value="Tgl. Diteruskan" />
+					<p:calendar value="#{suratMasukMB.suratMasuk.tglDisposisi}" showOn="button" navigator="true" required="false" locale="id" pattern="dd-MMM-yyyy" styleClass="inputanMedium"/>
+					<p:outputLabel value="Unit Pengolah" rendered="#{suratMasukMB.status}"/>
+					<p:selectOneMenu value="#{suratMasukMB.suratMasuk.pengelolaArsip.id}" rendered="#{suratMasukMB.status}" panelStyle="width:250px"  
+	                         style="width:260px">  
+	            			<f:selectItem itemLabel="#{suratMasukMB.pengelolaArsip.namaPengelola}" itemValue="#{suratMasukMB.pengelolaArsip.id}" />  
+	            			<f:selectItems value="#{suratMasukMB.selectOneItemsPengelolaArsip}"/>             			 
+					</p:selectOneMenu>
+					<p:outputLabel value="Upload File"/>
+					<p:fileUpload fileUploadListener="#{suratMasukMB.handleUpload}" mode="advanced"  
+            update="messages" auto="true" sizeLimit="200000" allowTypes="/(\.|\/)(gif|jpe?g|png|pdf)$/"/>  
+  
+    <p:growl id="messages" showDetail="true"/>
+					<f:facet name="footer">
+						<p:commandButton value="Simpan" icon="ui-simpan" update=":formSuratMasuk:tblSuratMasuk,:messages" 
+							action="#{suratMasukMB.updateSuratMasuk(event)}" oncomplete="PF('dlgEditSuratMasuk').hide();"/>
+						<p:spacer width="10px"/>
+						<p:commandButton value="Batal" icon="ui-batal" onclick="PF('dlgEditSuratMasuk').hide();"/>
+					</f:facet>
+				</p:panelGrid>				
+    		</h:form>  
+		</p:dialog> 
+</ui:composition>	    

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+     
+<f:view contentType="text/html">
+	<h:head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title><ui:insert name="title" /></title>
+        <link rel="stylesheet" type="text/css" href="${request.contextPath}/resources/css/defaultStyle.css" />
+   	</h:head>
+       
+   	<h:body>
+        <p:growl id="growlMessages" showDetail="false" sticky="false" life="13000" />
+		<p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();"/>  		              
+		<p:dialog modal="true" widgetVar="statusDialog" showHeader="false"   
+		        draggable="false" closable="false" resizable="false">  
+		    <p:graphicImage value="/resources/css/images/ajaxloader.gif" />  
+		</p:dialog>        
+		
+       	<div id="container">
+       		<c:if test="${not empty currentUser.name}">
+       			<h:form>
+	       			<p:dock>  
+					    <p:menuitem value="Home" icon="/resources/css/images/House.png" url="/app/main"/>  
+					    <p:menuitem value="Data Entry" icon="/resources/css/images/Email-Edit.png" action="loadDataEntry"/>
+					    <p:menuitem value="Laporan" icon="/resources/css/images/Report.png" />					      
+					</p:dock>
+				</h:form>  
+       		</c:if>
+        	<div id="left-sidebar">
+        		<div id="logo"><a href="${request.contextPath}/app/main"><img src="${request.contextPath}/resources/css/images/logo.jpg"/></a></div>
+	        	<ui:insert name="sidebar" />            	
+            </div>
+            <div id="main-left">
+            	<div id="header">
+            		<div class="judul"><ui:insert name="pageTitle"/></div>
+            	</div>
+	        	<ui:insert name="main-content"/>
+            </div>
+            <div class="clearfix"/>
+   		</div>
+	</h:body>
+</f:view>
+</html>

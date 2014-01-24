@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:h="http://java.sun.com/jsf/html"
+          xmlns:f="http://java.sun.com/jsf/core"
+          xmlns:c="http://java.sun.com/jsp/jstl/core"
+          xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+     
+<f:view contentType="text/html">
+	<h:head>
+    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title><ui:insert name="title" /></title>
+        <link rel="stylesheet" type="text/css" href="${request.contextPath}/resources/css/style.css" />
+   	</h:head>
+       
+   	<h:body>
+        <p:growl id="growlMessages" showDetail="false" sticky="false" life="13000" />
+       	<div id="container">
+        	<div id="greeting">
+				<c:if test="${not empty currentUser.name}">
+                     <b>Welcome,</b> <h:outputText value="#{userService.loggedinUser.firstName} #{userService.loggedinUser.lastName}"/> | <a href="${request.contextPath}/app/logout"><img alt="" title="Logout" src="${request.contextPath}/resources/css/images/Lock.png" /></a>
+                </c:if>
+          	</div>
+            <div id="header">
+				<a href="#"><img src="${request.contextPath}/resources/css/images/amplop.gif"/></a>
+				<div class="judul">Sistem Informasi Kearsipan (SIAr)</div>
+				<div class="clearfix"></div>
+					<h:form id="formMenu">
+						<p:menubar>  
+        					<p:submenu label="Home" icon="ui-home">    
+					            <p:menuitem value="Ganti Password" url="#" icon="ui-key"/>  
+            					<p:menuitem value="Logout" url="#" icon="ui-logout"/>  
+	        				</p:submenu>  
+	  
+					        <p:submenu label="Data Entry" icon="ui-icon-pencil">  
+					            <p:menuitem value="Surat Masuk" url="#" icon="ui-surat-masuk" />  
+					            <p:menuitem value="Surat Keluar" url="#" icon="ui-surat-keluar" />  
+					        </p:submenu>   
+	    				</p:menubar>
+					</h:form>
+            </div>
+           	<div id="line"></div>
+            <div id="content">
+            	<div id="left-sidebar">
+	            	<ui:insert name="sidebar" />            	
+            	</div>
+            	<div id="main-left">
+	            	<ui:insert name="main-content"/>
+            	</div>
+            	<div class="clearfix" />
+           	</div>
+            <div id="footer">
+           	</div>
+   		</div>
+	</h:body>
+</f:view>
+</html>
